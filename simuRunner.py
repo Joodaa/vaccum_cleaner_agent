@@ -10,6 +10,9 @@ from numpy import matrix
 from simu import Simu
 from agents import BasicAgent
 from agents import DustPerceptAgent
+from agents import DustPerceptWallMemAgent
+from agents import RepeatMovementSuccessAgent
+from agents import FullSenseAgent
 import sys
 
 import matplotlib.pyplot as plt
@@ -19,7 +22,7 @@ import matplotlib.pyplot as plt
 # this file contains the 'environment matrix' for the agent
 environmentFilePath = "complex_environment.json"
 
-numberOfIterations = 1
+numberOfIterations = 20
 
 with open(environmentFilePath) as json_file:
     data = json.load(json_file)
@@ -28,6 +31,7 @@ myEnvironment =  matrix( data['environment'] )
 print "Simu runner: Environment loaded"
 
 print DataFrame( myEnvironment )
+
 
 
 
@@ -71,21 +75,22 @@ print ""
 
 for iteration in range(0,numberOfIterations):
     update_progress(float(iteration)/numberOfIterations)
-    myRobot = DustPerceptAgent( "Reflexive_002" )
-    mySimu = Simu( myEnvironment.copy(),myRobot,[1,1], True)
-    mySimu.run( 100000,0.01 )
+    myRobot = FullSenseAgent( "Mem_002" )
+    mySimu = Simu( myEnvironment.copy(),myRobot,[1,1], False)
+    mySimu.run( 100000,0.00 )
     total_energy_cost_dust.append(mySimu.give_total_energy_cost())
-    mySimu.print_statistics()
-    #myRobot = BasicAgent( "Reflexive_001" )
-    #mySimu = Simu( myEnvironment.copy(),myRobot,[1,1], False)
-    #mySimu.run( 100000,0.000 )
-    #total_energy_cost_basic.append(mySimu.give_total_energy_cost())
-    #total_time_cost.append(mySimu.give_total_time_cost())
+    #mySimu.print_statistics()
+    myRobot = BasicAgent( "Reflexive_001" )
+    mySimu = Simu( myEnvironment.copy(),myRobot,[1,1], False)
+    mySimu.run( 100000,0.000 )
+    total_energy_cost_basic.append(mySimu.give_total_energy_cost())
 
-#plt.plot(total_energy_cost_basic)
-#plt.plot(total_energy_cost_dust)
-#plt.legend(['BasicAgent','DustPerceptAgent'])
-#plt.xlabel('Simu Iteration')
-#plt.ylabel('Energy Consumption')
-#plt.title('AI-Agent Battle result: BasicAgent -vs- DustPerceptAgent')
-#plt.show()
+
+plt.plot(total_energy_cost_basic)
+plt.plot(total_energy_cost_dust)
+plt.legend(['BasicAgent','FullSenseAgent'])
+plt.xlabel('Simu Iteration')
+plt.ylabel('Energy Consumption')
+plt.title('AI-Agent: BasicAgent -vs- FullSenseAgent')
+plt.grid()
+plt.show()

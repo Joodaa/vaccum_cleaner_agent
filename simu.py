@@ -94,6 +94,19 @@ class Simu:
                     return [zeilennummer,spaltennummer]
         return [-1,-1]
 
+    #[left,right,up,down]
+    def give_sense_surrounding_response(self):
+        current_robot_coordinates = self.give_current_robot_coordinates()
+        #print current_robot_coordinates
+        z = current_robot_coordinates[0]
+        s = current_robot_coordinates[1]
+        #print self.environment_layer[z,s]
+        #print "left: ",self.environment_layer[z,(s-1)]
+        #print "right: ",self.environment_layer[z,(s+1)]
+        #print "up: ",self.environment_layer[(z-1),s]
+        #print "down: ", self.environment_layer[(z+1),s]
+        return [self.environment_layer[z,(s-1)],self.environment_layer[z,(s+1)],self.environment_layer[(z-1),s],self.environment_layer[(z+1),s]]
+
     def update_robot_position(self,position):
         zeilenZahl =  np.size(self.environment_layer,0)
         spaltenZahl =  np.size(self.environment_layer,1)
